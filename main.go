@@ -78,7 +78,7 @@ func getExercises(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := http.Get(WGER_API + "/exerciseinfo/?muscles=" + muscleID + "&language=12&status=2")
+	resp, err := http.Get(WGER_API + "/exerciseinfo/?muscles=" + muscleID + "&language=2&status=2")
 	if err != nil {
 		http.Error(w, "Erreur lors de l'appel à l'API", http.StatusInternalServerError)
 		return
