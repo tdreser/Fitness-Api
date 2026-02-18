@@ -196,6 +196,10 @@ async function loadMuscleCards() {
                 </div>
             `;
 
+            card.dataset.image = imageUrl;
+            card.dataset.side = side;
+            card.dataset.label = group.label;
+
             card.innerHTML = `
                 <div class="muscle-card-header">
                     <h3>${group.label}</h3>
@@ -218,7 +222,7 @@ async function loadMuscleCards() {
                 toggle.disabled = true;
             } else {
                 toggle.addEventListener('click', () => {
-                    toggleMuscleExercises(card, muscleId);
+                    toggleMuscleExercises(card, muscleId, card.dataset.image, card.dataset.side, card.dataset.label);
                 });
             }
         });
@@ -247,7 +251,7 @@ function getMuscleSide(groupKey) {
     return 'front';
 }
 
-function toggleMuscleExercises(card, muscleId) {
+function toggleMuscleExercises(card, muscleId, muscleImageUrl, muscleSide, muscleLabel) {
     const body = card.querySelector('.muscle-exercises');
     const toggle = card.querySelector('.muscle-toggle');
     const isExpanded = toggle.getAttribute('data-expanded') === 'true';
@@ -265,13 +269,13 @@ function toggleMuscleExercises(card, muscleId) {
 
     if (!body.dataset.loaded) {
         body.innerHTML = '<p class="loading">Chargement des exercices...</p>';
-        loadExercisesForCard(muscleId, body).then(() => {
+        loadExercisesForCard(muscleId, body, { muscleImageUrl, muscleSide, muscleLabel }).then(() => {
             body.dataset.loaded = 'true';
         });
     }
 }
 
-async function loadExercisesForCard(muscleId, container) {
+async function loadExercisesForCard(muscleId, container, muscleMeta) {
     try {
         const response = await fetch(`/api/exercises?muscle=${muscleId}`);
         const data = await response.json();
@@ -297,7 +301,7 @@ async function loadExercisesForCard(muscleId, container) {
 
             const description = trimText(stripHtml(String(translation.description || '')), 220);
             const difficulty = estimateDifficulty(exercise);
-            const imageUrl = getExerciseImage(exercise);
+            const imageBlock = buildExerciseImage(muscleMeta);
 
             const item = document.createElement('li');
             item.className = 'exercise-item';
@@ -306,7 +310,7 @@ async function loadExercisesForCard(muscleId, container) {
                     <h4 class="exercise-title">${name}</h4>
                     <span class="exercise-difficulty">${difficulty}</span>
                 </div>
-                ${imageUrl ? `<img class="exercise-image" src="${imageUrl}" alt="${name}">` : ''}
+                ${imageBlock}
                 <p class="exercise-desc">${description || 'Description indisponible.'}</p>
             `;
             items.push(item);
@@ -360,11 +364,17 @@ function getTranslation(exercise, languageId) {
     return preferred || exercise.translations[0] || { name: exercise.name, description: exercise.description };
 }
 
-function getExerciseImage(exercise) {
-    if (Array.isArray(exercise.images) && exercise.images.length > 0) {
-        return exercise.images[0].image;
-    }
-    return '';
+function buildExerciseImage(muscleMeta) {
+    const safeMeta = muscleMeta || {};
+    const side = safeMeta.muscleSide === 'back' ? 'back' : 'front';
+    const label = safeMeta.muscleLabel || 'Exercice';
+    const imageUrl = safeMeta.muscleImageUrl || '';
+
+    return `
+        <div class="exercise-image-wrap exercise-image-wrap--${side}">
+            ${imageUrl ? `<img class="exercise-image" src="${imageUrl}" alt="${label}">` : '<div class="exercise-image-fallback">Illustration indisponible</div>'}
+        </div>
+    `;
 }
 
 function estimateDifficulty(exercise) {
