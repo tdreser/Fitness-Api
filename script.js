@@ -281,7 +281,7 @@ async function loadExercisesForCard(muscleId, container, muscleMeta) {
         const data = await response.json();
 
         if (!data.results || data.results.length === 0) {
-            container.innerHTML = '<p class="info">Aucun exercice trouve</p>';
+            container.innerHTML = '<p class="info">Aucun exercice trouvé</p>';
             return;
         }
 
@@ -292,8 +292,8 @@ async function loadExercisesForCard(muscleId, container, muscleMeta) {
 
         for (let i = 0; i < maxItems; i++) {
             const exercise = data.results[i] || {};
-            const translation = getTranslation(exercise, 12);
-            if (translation.language !== 12) {
+            const translation = getFrenchTranslation(exercise, 12);
+            if (!translation) {
                 continue;
             }
 
@@ -321,7 +321,7 @@ async function loadExercisesForCard(muscleId, container, muscleMeta) {
         }
 
         if (items.length === 0) {
-            container.innerHTML = '<p class="info">Aucun exercice trouve</p>';
+            container.innerHTML = '<p class="info">Aucun exercice disponible en français</p>';
             return;
         }
 
@@ -359,22 +359,17 @@ async function loadExercisesForCard(muscleId, container, muscleMeta) {
     }
 }
 
-function getTranslation(exercise, languageId) {
+function getFrenchTranslation(exercise, languageId) {
     if (!Array.isArray(exercise.translations)) {
-        return { name: exercise.name, description: exercise.description, language: null };
+        return null;
     }
 
-    const preferred = exercise.translations.find(t => t.language === languageId);
-    if (preferred) {
-        return { name: preferred.name, description: preferred.description, language: languageId };
+    const preferred = exercise.translations.find(t => t.language === languageId || t.language_id === languageId);
+    if (!preferred) {
+        return null;
     }
 
-    const fallback = exercise.translations[0];
-    return {
-        name: (fallback && fallback.name) || exercise.name,
-        description: (fallback && fallback.description) || exercise.description,
-        language: fallback && typeof fallback.language === 'number' ? fallback.language : null
-    };
+    return { name: preferred.name, description: preferred.description };
 }
 
 function buildExerciseImage(muscleMeta) {
