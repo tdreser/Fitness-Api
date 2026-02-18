@@ -3,7 +3,7 @@ const MUSCLE_GROUPS = [
     { key: 'triceps', label: 'Triceps', match: ['triceps'] },
     { key: 'dos', label: 'Dos', match: ['back', 'latissimus', 'lats'] },
     { key: 'abdos', label: 'Abdos', match: ['abdominals', 'obliques', 'rectus'] },
-    { key: 'epaules', label: 'Epaules', match: ['deltoid', 'shoulder'] },
+    { key: 'epaules', label: 'Épaules', match: ['deltoid', 'shoulder'] },
     { key: 'pectoraux', label: 'Pectoraux', match: ['pectoralis', 'chest'] }
 ];
 
@@ -293,6 +293,10 @@ async function loadExercisesForCard(muscleId, container, muscleMeta) {
         for (let i = 0; i < maxItems; i++) {
             const exercise = data.results[i] || {};
             const translation = getTranslation(exercise, 12);
+            if (translation.language !== 12) {
+                continue;
+            }
+
             const name = String(translation.name || '').trim();
 
             if (!name) {
@@ -357,11 +361,20 @@ async function loadExercisesForCard(muscleId, container, muscleMeta) {
 
 function getTranslation(exercise, languageId) {
     if (!Array.isArray(exercise.translations)) {
-        return { name: exercise.name, description: exercise.description };
+        return { name: exercise.name, description: exercise.description, language: null };
     }
 
     const preferred = exercise.translations.find(t => t.language === languageId);
-    return preferred || exercise.translations[0] || { name: exercise.name, description: exercise.description };
+    if (preferred) {
+        return { name: preferred.name, description: preferred.description, language: languageId };
+    }
+
+    const fallback = exercise.translations[0];
+    return {
+        name: (fallback && fallback.name) || exercise.name,
+        description: (fallback && fallback.description) || exercise.description,
+        language: fallback && typeof fallback.language === 'number' ? fallback.language : null
+    };
 }
 
 function buildExerciseImage(muscleMeta) {
