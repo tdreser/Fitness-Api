@@ -292,7 +292,7 @@ async function loadExercisesForCard(muscleId, container, muscleMeta) {
 
         for (let i = 0; i < maxItems; i++) {
             const exercise = data.results[i] || {};
-            const translation = getFrenchTranslation(exercise, 12);
+            const translation = getEnglishTranslation(exercise, 2);
             if (!translation) {
                 continue;
             }
@@ -321,7 +321,7 @@ async function loadExercisesForCard(muscleId, container, muscleMeta) {
         }
 
         if (items.length === 0) {
-            container.innerHTML = '<p class="info">Aucun exercice disponible en français</p>';
+            container.innerHTML = '<p class="info">Aucun exercice disponible en anglais</p>';
             return;
         }
 
@@ -359,7 +359,7 @@ async function loadExercisesForCard(muscleId, container, muscleMeta) {
     }
 }
 
-function getFrenchTranslation(exercise, languageId) {
+function getEnglishTranslation(exercise, languageId) {
     if (!Array.isArray(exercise.translations)) {
         return null;
     }
