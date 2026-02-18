@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness API - Exercices par Muscle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>💪 Fitness API</h1>
+                    <p>Explorez les exercices par groupe musculaire</p>
+                </div>
+                <div class="auth-section">
+                    <div id="userInfo" class="user-info hidden">
+                        <span id="userEmail"></span>
+                        <button id="logoutBtn" class="btn-secondary">Déconnexion</button>
+                    </div>
+                    <button id="loginBtn" class="btn-primary">Connexion</button>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="groups-section">
+                <h2>Exercices par groupe musculaire</h2>
+                <div id="muscleCards" class="muscle-cards">
+                    <p class="loading">Chargement des muscles...</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Données provenant de l'API Wger - <a href="https://wger.de/" target="_blank">wger.de</a></p>
+        </footer>
+    </div>
+
+    <!-- Modal Authentification -->
+    <div id="authModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2 id="modalTitle">Connexion</h2>
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" required>
+                        <button type="button" class="toggle-password" id="togglePassword">👁️</button>
+                    </div>
+                </div>
+                <div id="authError" class="error-message hidden"></div>
+                <button type="submit" class="btn-primary btn-full">Se connecter</button>
+            </form>
+            <p class="auth-switch">
+                <span id="switchText">Pas de compte ?</span>
+                <a href="#" id="switchMode">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
