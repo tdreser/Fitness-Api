@@ -1,3 +1,3 @@
 module Fitness-Api
 
-go 1.25.5
+go 1.25.0
