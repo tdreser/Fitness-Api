@@ -252,27 +252,27 @@ function getMuscleSide(groupKey) {
 }
 
 function toggleMuscleExercises(card, muscleId, muscleImageUrl, muscleSide, muscleLabel) {
-    const body = card.querySelector('.muscle-exercises');
-    const toggle = card.querySelector('.muscle-toggle');
-    const isExpanded = toggle.getAttribute('data-expanded') === 'true';
+    openExercisesModal(muscleId, muscleImageUrl, muscleSide, muscleLabel);
+}
 
-    if (isExpanded) {
-        body.classList.add('hidden');
-        toggle.textContent = 'Voir exercices';
-        toggle.setAttribute('data-expanded', 'false');
-        return;
-    }
+function openExercisesModal(muscleId, muscleImageUrl, muscleSide, muscleLabel) {
+    const modal = document.getElementById('exercisesModal');
+    const modalTitle = document.getElementById('exercisesModalTitle');
+    const modalBody = document.getElementById('exercisesModalBody');
+    const closeBtn = document.querySelector('.exercises-modal-close');
 
-    body.classList.remove('hidden');
-    toggle.textContent = 'Masquer';
-    toggle.setAttribute('data-expanded', 'true');
+    modalTitle.textContent = muscleLabel || 'Exercices';
+    modalBody.innerHTML = '<p class="loading">Chargement des exercices...</p>';
+    modal.classList.remove('hidden');
 
-    if (!body.dataset.loaded) {
-        body.innerHTML = '<p class="loading">Chargement des exercices...</p>';
-        loadExercisesForCard(muscleId, body, { muscleImageUrl, muscleSide, muscleLabel }).then(() => {
-            body.dataset.loaded = 'true';
-        });
-    }
+    closeBtn.onclick = () => modal.classList.add('hidden');
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    };
+
+    loadExercisesForCard(muscleId, modalBody, { muscleImageUrl, muscleSide, muscleLabel });
 }
 
 async function loadExercisesForCard(muscleId, container, muscleMeta) {
