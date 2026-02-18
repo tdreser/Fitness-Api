@@ -12,8 +12,18 @@ import (
 )
 
 const WGER_API = "https://wger.de/api/v2"
-const SUPABASE_URL = "https://egskxibwbafmruhnsiyd.supabase.co"
-const SUPABASE_ANON_KEY = "sb_publishable_45Yb6kMRPHZymtDcc7VaGg_Xq73NfxI"
+
+func getEnv(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
+}
+
+var (
+	SUPABASE_URL      = getEnv("SUPABASE_URL", "https://egskxibwbafmruhnsiyd.supabase.co")
+	SUPABASE_ANON_KEY = getEnv("SUPABASE_ANON_KEY", "sb_publishable_45Yb6kMRPHZymtDcc7VaGg_Xq73NfxI")
+)
 
 // Structures pour les réponses de l'API Wger
 type MusclesResponse struct {
@@ -212,7 +222,8 @@ func main() {
 	http.HandleFunc("/style.css", serveStatic)
 	http.HandleFunc("/script.js", serveStatic)
 
-	fmt.Println("🏋️ Serveur Fitness API lancé sur http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	port := getEnv("PORT", "8080")
+	fmt.Printf("🏋️ Serveur Fitness API lancé sur le port %s\n", port)
+	http.ListenAndServe(":"+port, nil)
 }
  
