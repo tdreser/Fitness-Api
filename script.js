@@ -189,13 +189,19 @@ async function loadMuscleCards() {
             const muscle = findMuscle(data.results, group.match);
             const muscleId = muscle ? muscle.id : null;
             const imageUrl = muscle && muscle.image_url_main ? `https://wger.de${muscle.image_url_main}` : '';
+            const side = getMuscleSide(group.key);
+            const imageBlock = `
+                <div class="muscle-image-wrap muscle-image-wrap--${side}">
+                    ${imageUrl ? `<img class="muscle-image" src="${imageUrl}" alt="${group.label}">` : '<div class="muscle-image-fallback">Image indisponible</div>'}
+                </div>
+            `;
 
             card.innerHTML = `
                 <div class="muscle-card-header">
                     <h3>${group.label}</h3>
                     <button class="muscle-toggle" type="button" data-expanded="false">Voir exercices</button>
                 </div>
-                ${imageUrl ? `<img class="muscle-image" src="${imageUrl}" alt="${group.label}">` : ''}
+                ${imageBlock}
                 <div class="muscle-exercises hidden">
                     <p class="info">Cliquez sur "Voir exercices" pour afficher la liste.</p>
                 </div>
@@ -232,6 +238,13 @@ function findMuscle(muscles, keywords) {
         }
     }
     return null;
+}
+
+function getMuscleSide(groupKey) {
+    if (groupKey === 'dos' || groupKey === 'triceps') {
+        return 'back';
+    }
+    return 'front';
 }
 
 function toggleMuscleExercises(card, muscleId) {
