@@ -1,80 +1,158 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness API - Exercices par Muscle</title>
+    <title>Fitness API - Exercises by Muscle</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="ambient-bg" aria-hidden="true"></div>
     <div class="container">
         <header>
             <div class="header-content">
                 <div>
-                    <h1>💪 Fitness API</h1>
-                    <p>Explorez les exercices par groupe musculaire</p>
+                    <p class="kicker">Performance Lab - Strength Mode</p>
+                    <span class="live-pill">ON AIR</span>
+                    <h1>Fitness API</h1>
+                    <p>Explore muscle groups, filter your exercises, and launch an intense session in one click.</p>
                 </div>
                 <div class="auth-section">
                     <div id="userInfo" class="user-info hidden">
                         <span id="userEmail"></span>
-                        <button id="logoutBtn" class="btn-secondary">Déconnexion</button>
+                        <button id="logoutBtn" class="btn-secondary">Logout</button>
                     </div>
-                    <button id="loginBtn" class="btn-primary">Connexion</button>
+                    <button id="loginBtn" class="btn-primary">Login</button>
                 </div>
             </div>
         </header>
 
         <main>
-            <section class="groups-section">
-                <h2>Exercices par groupe musculaire</h2>
-                <div id="muscleCards" class="muscle-cards">
-                    <p class="loading">Chargement des muscles...</p>
+            <section class="overview-section">
+                <article class="stat-card">
+                    <p class="stat-label">API Source</p>
+                    <p id="statSource" class="stat-value">-</p>
+                </article>
+                <article class="stat-card">
+                    <p class="stat-label">Available Groups</p>
+                    <p id="statAvailable" class="stat-value">0 / 6</p>
+                </article>
+                <article class="stat-card">
+                    <p class="stat-label">Library</p>
+                    <p id="statTotal" class="stat-value">6 groups</p>
+                </article>
+            </section>
+
+            <section class="controls-section">
+                <div class="input-group">
+                    <label for="searchMuscle">Search</label>
+                    <input id="searchMuscle" type="text" placeholder="Ex: biceps, back, shoulders...">
                 </div>
+                <div class="input-group">
+                    <label for="sideFilter">Anatomical View</label>
+                    <select id="sideFilter">
+                        <option value="all">All</option>
+                        <option value="front">Front</option>
+                        <option value="back">Back</option>
+                    </select>
+                </div>
+                <button id="randomWorkoutBtn" class="btn-accent" type="button">Random Workout</button>
+            </section>
+
+            <section class="performance-section">
+                <article class="performance-card">
+                    <div class="performance-card-head">
+                        <h3>Today's Plan</h3>
+                        <button id="generatePlanBtn" class="btn-primary" type="button">Generate</button>
+                    </div>
+                    <p id="planHint" class="performance-hint">Generate a plan based on available groups.</p>
+                    <ul id="planList" class="plan-list">
+                        <li class="info">No plan generated yet.</li>
+                    </ul>
+                </article>
+
+                <article class="performance-card">
+                    <div class="performance-card-head">
+                        <h3>Timer HIIT</h3>
+                    </div>
+                    <div class="timer-inputs">
+                        <label>Work (s)
+                            <input id="workSeconds" type="number" min="10" max="300" value="40">
+                        </label>
+                        <label>Rest (s)
+                            <input id="restSeconds" type="number" min="5" max="180" value="20">
+                        </label>
+                        <label>Rounds
+                            <input id="roundCount" type="number" min="1" max="20" value="6">
+                        </label>
+                    </div>
+                    <p id="timerPhase" class="timer-phase">Ready</p>
+                    <p id="timerDisplay" class="timer-display">00:40</p>
+                    <div class="timer-actions">
+                        <button id="timerStartBtn" class="btn-primary" type="button">Start</button>
+                        <button id="timerPauseBtn" class="btn-secondary" type="button">Pause</button>
+                        <button id="timerResetBtn" class="btn-secondary" type="button">Reset</button>
+                    </div>
+                </article>
+
+                <article class="performance-card">
+                    <div class="performance-card-head">
+                        <h3>Local Progress</h3>
+                    </div>
+                    <div class="progress-grid">
+                        <div>
+                            <p class="progress-label">Generated Plans</p>
+                            <p id="metricPlans" class="progress-value">0</p>
+                        </div>
+                        <div>
+                            <p class="progress-label">Completed Timers</p>
+                            <p id="metricTimers" class="progress-value">0</p>
+                        </div>
+                    </div>
+                    <p class="progress-label">Last Updated</p>
+                    <p id="metricLastUpdate" class="progress-last">-</p>
+                    <button id="resetProgressBtn" class="btn-secondary progress-reset" type="button">Reset Stats</button>
+                </article>
+            </section>
+
+            <section class="groups-section">
+                <h2>Exercises by Muscle Group</h2>
+                <div id="muscleCards" class="muscle-cards">
+                    <p class="loading">Loading muscles...</p>
+                </div>
+                <p id="noResults" class="info hidden">No muscle groups match your filters.</p>
             </section>
         </main>
 
         <footer>
-            <p>Données provenant de l'API Wger - <a href="https://wger.de/" target="_blank">wger.de</a></p>
+            <p>Data provided by the Wger API - <a href="https://wger.de/" target="_blank">wger.de</a></p>
         </footer>
     </div>
 
-    <!-- Modal Authentification -->
+    <!-- Authentication Modal -->
     <div id="authModal" class="modal hidden">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
-            <h2 id="modalTitle">Connexion</h2>
+            <h2 id="modalTitle">Login</h2>
             <form id="authForm">
                 <div class="form-group">
                     <label for="email">E-mail</label>
                     <input type="email" id="email" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Mot de passe</label>
+                    <label for="password">Password</label>
                     <div class="password-input-wrapper">
                         <input type="password" id="password" required>
                         <button type="button" class="toggle-password" id="togglePassword">👁️</button>
                     </div>
                 </div>
                 <div id="authError" class="error-message hidden"></div>
-                <button type="submit" class="btn-primary btn-full">Se connecter</button>
+                <button type="submit" class="btn-primary btn-full">Sign in</button>
             </form>
             <p class="auth-switch">
-                <span id="switchText">Pas de compte ?</span>
-                <a href="#" id="switchMode">S'inscrire</a>
+                <span id="switchText">No account yet?</span>
+                <a href="#" id="switchMode">Sign up</a>
             </p>
-        </div>
-    </div>
-
-    <!-- Modal Exercices -->
-    <div id="exercisesModal" class="modal hidden">
-        <div class="exercises-modal-content">
-            <div class="exercises-modal-header">
-                <h2 id="exercisesModalTitle"></h2>
-                <button class="exercises-modal-close">&times;</button>
-            </div>
-            <div id="exercisesModalBody" class="exercises-modal-body">
-                <p class="loading">Chargement des exercices...</p>
-            </div>
         </div>
     </div>
 

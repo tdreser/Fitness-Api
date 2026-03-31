@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness API - Exercises</title>
+    <link rel="stylesheet" href="exercises.css">
+</head>
+<body>
+    <div class="ambient-bg" aria-hidden="true"></div>
+
+    <main class="container">
+        <header class="hero">
+            <button id="backBtn" class="btn-secondary" type="button">Back</button>
+            <div class="hero-copy">
+                <p class="kicker">Exercise Detail View</p>
+                <h1 id="pageTitle">Exercises</h1>
+                <p id="pageSubtitle">Loading exercises...</p>
+            </div>
+            <div class="hero-image-wrap" id="heroImageWrap">
+                <img id="heroImage" class="hero-image" alt="Target muscle">
+                <div id="heroImageFallback" class="hero-image-fallback">Illustration unavailable</div>
+            </div>
+        </header>
+
+        <section class="overview">
+            <article class="stat-card">
+                <p class="stat-label">API Source</p>
+                <p id="statSource" class="stat-value">-</p>
+            </article>
+            <article class="stat-card">
+                <p class="stat-label">Displayed Exercises</p>
+                <p id="statCount" class="stat-value">0</p>
+            </article>
+            <article class="stat-card">
+                <p class="stat-label">Preferred Language</p>
+                <p class="stat-value">EN</p>
+            </article>
+        </section>
+
+        <section class="controls">
+            <div class="input-group">
+                <label for="exerciseSearch">Search exercise</label>
+                <input id="exerciseSearch" type="text" placeholder="Name or keyword...">
+            </div>
+            <div class="input-group">
+                <label for="difficultyFilter">Difficulty</label>
+                <select id="difficultyFilter">
+                    <option value="all">All</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+            <div class="input-group checkbox-group">
+                <label for="frenchOnly">Language</label>
+                <div class="checkbox-wrap">
+                    <input id="frenchOnly" type="checkbox">
+                    <span>English only</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="list-section">
+            <ul id="exerciseGrid" class="exercise-grid">
+                <li class="loading">Loading exercises...</li>
+            </ul>
+            <p id="emptyState" class="info hidden">No exercises match your filters.</p>
+        </section>
+    </main>
+
+    <script src="exercises.js"></script>
+</body>
+</html>

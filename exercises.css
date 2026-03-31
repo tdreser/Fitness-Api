@@ -1,0 +1,428 @@
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg-0: #080909;
+    --bg-1: #111315;
+    --line: #2f3339;
+    --card: #171a1d;
+    --text: #f3f4f6;
+    --muted: #9ea4ac;
+    --red: #ff2f43;
+    --red-deep: #b50f24;
+    --ok: #2ad48e;
+    --radius: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Manrope', sans-serif;
+    background: linear-gradient(180deg, var(--bg-0), #0d0f10 100%);
+    color: var(--text);
+}
+
+.ambient-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        radial-gradient(circle at 8% -10%, rgba(255, 47, 67, 0.26), transparent 35%),
+        radial-gradient(circle at 90% 12%, rgba(181, 15, 36, 0.2), transparent 30%),
+        repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.02) 0, rgba(255, 255, 255, 0.02) 2px, transparent 2px, transparent 14px);
+}
+
+.container {
+    width: min(1180px, 92%);
+    margin: 24px auto 36px;
+    display: grid;
+    gap: 14px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.hero,
+.overview,
+.controls,
+.list-section {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, #181b1f 0%, #14171a 100%);
+}
+
+.hero {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: auto 1fr 230px;
+    gap: 14px;
+    align-items: center;
+}
+
+.hero-copy h1 {
+    font-family: 'Teko', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 0.95;
+}
+
+.kicker {
+    text-transform: uppercase;
+    color: #a5aeb8;
+    letter-spacing: 0.17em;
+    font-size: 0.7rem;
+}
+
+#pageSubtitle {
+    color: #d5dae1;
+    margin-top: 6px;
+    font-size: 0.95rem;
+}
+
+.hero-image-wrap {
+    position: relative;
+    border: 1px solid #343941;
+    background: #101214;
+    border-radius: 12px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+.hero-image-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    background: url('https://wger.de/static/images/muscles/muscular_system_front.svg') center/contain no-repeat;
+    opacity: 0.65;
+}
+
+.hero-image-wrap--back::before {
+    background-image: url('https://wger.de/static/images/muscles/muscular_system_back.svg');
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-image-fallback {
+    position: relative;
+    z-index: 1;
+    color: #94a0ad;
+    font-size: 0.85rem;
+}
+
+.btn-secondary,
+.btn-primary {
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: inherit;
+    font-weight: 700;
+}
+
+.btn-secondary {
+    border: 1px solid #59616d;
+    background: transparent;
+    color: #f4f8fc;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+    color: #fff;
+}
+
+.overview {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    padding: 12px;
+}
+
+.stat-card {
+    border: 1px solid #353941;
+    border-radius: 12px;
+    background: #131518;
+    padding: 12px;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    margin-top: 4px;
+    font-family: 'Teko', sans-serif;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.controls {
+    padding: 12px;
+    display: grid;
+    grid-template-columns: 1.8fr 1fr 1.2fr;
+    gap: 10px;
+}
+
+.input-group {
+    display: grid;
+    gap: 6px;
+}
+
+.input-group label {
+    color: #bec5cd;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.input-group input,
+.input-group select {
+    background: #0f1113;
+    border: 1px solid #343941;
+    color: #f2f4f7;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-family: inherit;
+}
+
+.checkbox-group .checkbox-wrap {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #d8dee5;
+    font-size: 0.9rem;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: rgba(255, 47, 67, 0.9);
+    box-shadow: 0 0 0 3px rgba(255, 47, 67, 0.18);
+}
+
+.list-section {
+    padding: 14px;
+}
+
+.exercise-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.exercise-item {
+    border: 1px solid #353a42;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #141819 0%, #0f1215 100%);
+    padding: 18px;
+    display: grid;
+    gap: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.exercise-item:hover {
+    border-color: #4b5563;
+    box-shadow: 0 12px 32px rgba(255, 47, 67, 0.15);
+    transform: translateY(-4px);
+}
+
+.exercise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.exercise-title {
+    font-size: 1.15rem;
+    color: #f8fafc;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.exercise-badges {
+    display: flex;
+    gap: 6px;
+}
+
+.exercise-language {
+    border-radius: 999px;
+    border: 1px solid #4b5563;
+    background: rgba(148, 163, 184, 0.12);
+    color: #dce2e8;
+    padding: 4px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.exercise-language-auto {
+    border-color: rgba(255, 73, 90, 0.7);
+    background: rgba(255, 47, 67, 0.14);
+    color: #ffd7dc;
+}
+
+.exercise-difficulty {
+    border-radius: 999px;
+    border: 1px solid #26593f;
+    background: rgba(42, 212, 142, 0.12);
+    color: #8ef6c8;
+    padding: 4px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.exercise-image-wrap {
+    position: relative;
+    width: 100%;
+    min-height: 210px;
+    aspect-ratio: 16 / 10;
+    border-radius: 14px;
+    border: 1px solid #353a42;
+    background: linear-gradient(180deg, #101317 0%, #0c0f12 100%);
+    overflow: hidden;
+    display: grid;
+    align-items: stretch;
+    transition: all 0.3s ease;
+}
+
+.exercise-image-wrap::before {
+    content: none;
+}
+
+.exercise-image-wrap--back::before {
+    content: none;
+}
+
+.exercise-image-wrap--has-image::before {
+    display: none;
+}
+
+.exercise-image-wrap--single {
+    padding: 12px;
+}
+
+.exercise-image-wrap--double {
+    padding: 10px;
+    min-height: 250px;
+}
+
+.exercise-steps-grid {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.exercise-step-card {
+    margin: 0;
+    border-radius: 10px;
+    border: 1px solid rgba(64, 72, 84, 0.75);
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+.exercise-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    transform: none;
+    padding: 6px;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03), transparent 70%);
+    z-index: 1;
+}
+
+.exercise-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #090b0d;
+}
+
+.exercise-image-fallback {
+    text-align: center;
+    max-width: 90%;
+    line-height: 1.4;
+    z-index: 1;
+    color: #96a2af;
+    font-size: 0.85rem;
+}
+
+.exercise-desc {
+    color: #d5dce6;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    background: linear-gradient(180deg, rgba(148, 163, 184, 0.08), rgba(148, 163, 184, 0.04));
+    padding: 14px 14px;
+    border-radius: 12px;
+    border-left: 3px solid rgba(255, 47, 67, 0.4);
+}
+
+.loading,
+.info {
+    text-align: center;
+    color: #9da5af;
+    padding: 14px;
+    font-style: italic;
+}
+
+@media (max-width: 980px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-image-wrap {
+        width: 200px;
+    }
+
+    .overview {
+        grid-template-columns: 1fr;
+    }
+
+    .controls {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        width: 94%;
+        margin-top: 14px;
+    }
+
+    .exercise-image-wrap {
+        min-height: 190px;
+        aspect-ratio: 16 / 10;
+    }
+
+    .exercise-steps-grid {
+        grid-template-columns: 1fr;
+    }
+}
