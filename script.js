@@ -7,6 +7,15 @@ const MUSCLE_GROUPS = [
     { key: 'pectoraux', label: 'Chest', match: ['pectoralis', 'chest'] }
 ];
 
+const HOME_MUSCLE_IMAGES = {
+    biceps: 'images/biceps.webp',
+    triceps: 'images/Triceps_anatomie_TN.jpg',
+    dos: 'images/dos.jpg',
+    abdos: 'images/abdos.jpg',
+    epaules: 'images/epaules.jpg',
+    pectoraux: 'images/Pectoraux.jpg'
+};
+
 const TRANSLATION_PRIORITY = [12, 2, 1, 4, 13, 7];
 const LANGUAGE_LABELS = {
     12: 'FR',
@@ -283,15 +292,19 @@ async function loadMuscleCards() {
 
             const muscle = findMuscle(data.results, group.match);
             const muscleId = muscle ? muscle.id : null;
-            const imageUrl = muscle && muscle.image_url_main ? `https://wger.de${muscle.image_url_main}` : '';
+            const imageUrl = resolveWgerImageUrl(muscle?.image_url_main);
+            const customPreviewImageUrl = HOME_MUSCLE_IMAGES[group.key] || '';
+            const previewImageUrl = customPreviewImageUrl || imageUrl || resolveWgerImageUrl(muscle?.image_url_secondary);
             const side = getMuscleSide(group.key);
+            const customPreviewClass = customPreviewImageUrl ? ' muscle-image-wrap--custom' : '';
             const imageBlock = `
-                <div class="muscle-image-wrap muscle-image-wrap--${side}">
-                    ${imageUrl ? `<img class="muscle-image" src="${imageUrl}" alt="${group.label}">` : '<div class="muscle-image-fallback">Image unavailable</div>'}
+                <div class="muscle-image-wrap muscle-image-wrap--${side}${customPreviewClass}">
+                    ${previewImageUrl ? `<img class="muscle-image" src="${previewImageUrl}" alt="${group.label}">` : ''}
+                    <div class="muscle-image-fallback${previewImageUrl ? ' hidden' : ''}">Image unavailable</div>
                 </div>
             `;
 
-            card.dataset.image = imageUrl;
+            card.dataset.image = previewImageUrl;
             card.dataset.side = side;
             card.dataset.label = group.label;
             card.dataset.available = muscleId ? 'true' : 'false';
@@ -313,6 +326,15 @@ async function loadMuscleCards() {
 
             const body = card.querySelector('.muscle-exercises');
             const toggle = card.querySelector('.muscle-toggle');
+            const image = card.querySelector('.muscle-image');
+            const imageFallback = card.querySelector('.muscle-image-fallback');
+
+            if (image && imageFallback) {
+                image.addEventListener('error', () => {
+                    image.classList.add('hidden');
+                    imageFallback.classList.remove('hidden');
+                });
+            }
 
             if (!muscleId) {
                 body.classList.remove('hidden');
@@ -330,7 +352,7 @@ async function loadMuscleCards() {
                 side,
                 available: !!muscleId,
                 muscleId: muscleId || null,
-                imageUrl
+                imageUrl: previewImageUrl
             });
         });
 
@@ -648,6 +670,17 @@ function getMuscleSide(groupKey) {
         return 'back';
     }
     return 'front';
+}
+
+function resolveWgerImageUrl(rawUrl) {
+    const value = String(rawUrl || '').trim();
+    if (!value) {
+        return '';
+    }
+    if (value.startsWith('http://') || value.startsWith('https://')) {
+        return value;
+    }
+    return `https://wger.de${value}`;
 }
 
 function toggleMuscleExercises(card, muscleId, muscleImageUrl, muscleSide, muscleLabel) {
